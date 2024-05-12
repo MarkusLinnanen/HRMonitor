@@ -38,8 +38,8 @@ class EncoderButton:
 
 def connectWLAN():
     # network credentials
-    SSID = "Kotipesä"
-    PASSWORD = "orsacchiotto"
+    SSID = "Name"
+    PASSWORD = "Password"
     
     # Connecting to the group WLAN
     wlan = network.WLAN(network.STA_IF)
