@@ -127,22 +127,16 @@ def HRMeasure():
                     
                 oled.show()
                 
-                # vc = valCount and rc = readCount, done save time
-                led.off()
-                
                 peakHistory = peakHistory[-20:]
                 diff = max(history[-15:]) - min(history[-15:])
                 if value-min(history[-15:]) > diff*0.8 and time.ticks_ms() - t > 300:
                     peakHistory.append(time.ticks_ms() - t)
                     t = time.ticks_ms()
-                    print("here", value)
                     oled.fill_rect(0,0,127,8,0)
                     oled.text("Hz: " + str(60/((sum(peakHistory)/1000)/len(peakHistory))), 10, 0)
                     oled.show()
                     peakAmount +=1
-                    print((sum(peakHistory)/1000)/len(peakHistory))
                     lastPeak = True
-                    led.on()
                 else:
                     lastPeak = False
                 
@@ -186,9 +180,6 @@ def Measure30():
                 intervals.append(time.ticks_ms() - t)
                 t = time.ticks_ms()
                 peakAmount +=1
-                led.on()
-            else:
-                led.off()
             
             oled.fill_rect(0,15,127,67,0)
             oled.text(str(round((time.ticks_ms()-tStart)/1000)) + "/30",7,31,1)
@@ -245,15 +236,10 @@ def HRVMeasurement():
         print(e)
 
 def Kubios():
-    # kubios credentials
-    APIKEY = "pbZRUi49X48I56oL1Lq8y8NDjq6rPfzX3AQeNo3a"
-    CLIENT_ID = "3pjgjdmamlj759te85icf0lucv"
-    CLIENT_SECRET = "111fqsli1eo7mejcrlffbklvftcnfl4keoadrdv1o45vt9pndlef"
+    # enter kubios credentials here 
 
-    LOGIN_URL = "https://kubioscloud.auth.eu-west-1.amazoncognito.com/login"
-    TOKEN_URL = "https://kubioscloud.auth.eu-west-1.amazoncognito.com/oauth2/token"
-    REDIRECT_URI = "https://analysis.kubioscloud.com/v1/portal/login"
-
+    # FOR THE TEACHERS, THEY HAVE BEEN REMOVED FOR SECURITY REASONS!!!
+    
     response = requests.post(
     url = TOKEN_URL,
     data = 'grant_type=client_credentials&client_id={}'.format(CLIENT_ID),
@@ -310,7 +296,6 @@ def History():
         history = ujson.load(historyFile)
         SelectState = 0
         Selected = False
-        print(history)
         while True:
             indx = 1
             if Rot.fifo.has_data():
@@ -321,7 +306,6 @@ def History():
                 Selected = not Selected
                 RotPush.fifo.get()
             oled.fill(0)
-            #print(list(history))
             if Selected:
                 if SelectState == len(history): return
                 selectedMeasure = history[list(history)[SelectState]]
